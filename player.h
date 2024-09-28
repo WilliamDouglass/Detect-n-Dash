@@ -13,6 +13,7 @@ private:
     Camera3D camera;
     Vector3 cameraOffset;
     Vector2 forward;
+
     // float cameraYaw = 0.0f; 
     // float cameraPitch = 0.0f;
     // Rectangle collisionBox;
@@ -21,6 +22,8 @@ private:
     
     int size;
     float speed;
+    float runSpeed;
+    float walkSpeed;
     Color playerCol;
     
          

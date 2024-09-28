@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include "scoreTracker.h"
 #include "player.h"
+#include <iostream>
 
 
 class Coin
@@ -14,11 +15,11 @@ private:
     float radius;
     Color coinColor;
     bool collected;
-    ScoreTracker st;
+    ScoreTracker &st;
     
 
 public:
-    Coin(Vector3 aPos, ScoreTracker aST);
+    Coin(Vector3 aPos, ScoreTracker &aST);
     void Update();
 
     void Draw();

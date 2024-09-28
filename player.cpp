@@ -2,7 +2,7 @@
 
      
 Player::Player(Vector3 startPos, int initSize, float initSpeed, Color initColor)
-    :playerPosition(startPos),size(initSize),speed(initSpeed),playerCol(initColor){
+    :playerPosition(startPos),size(initSize),runSpeed(initSpeed),playerCol(initColor){
         roation = 0;
         cameraOffset = (Vector3){0.0f, 4.0f, -8.0f};
         camera.position = Vector3Add(playerPosition,cameraOffset);  // Camera position
@@ -10,7 +10,7 @@ Player::Player(Vector3 startPos, int initSize, float initSpeed, Color initColor)
         camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
         camera.fovy = 45.0f;                                // Camera field-of-view Y
         camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
- 
+        walkSpeed = runSpeed/2;
 
     }
 
@@ -43,6 +43,13 @@ void Player::Draw(){
 
 
 void Player::Move(){
+    if (IsKeyDown(KEY_LEFT_SHIFT))
+    {
+        speed = walkSpeed;
+    }else{
+        speed = runSpeed;
+    }
+    
     if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) // forward
     {
         playerPosition.x += forward.x * speed;
