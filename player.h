@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <rcamera.h>
+#include <iostream>
 
 class Player
 {
@@ -14,10 +15,7 @@ private:
     Vector3 cameraOffset;
     Vector2 forward;
 
-    // float cameraYaw = 0.0f; 
-    // float cameraPitch = 0.0f;
-    // Rectangle collisionBox;
-    
+   
     
     
     float size;
@@ -26,11 +24,16 @@ private:
     float walkSpeed;
     Color playerCol;
     float camSens;
+
+    int maxLives;
+    int curLives;
+    Vector3 startPos;
+
     
          
 
 public:
-    Player(Vector3 startPos, float initSize, float initSpeed, Color initColor);
+    Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor);
 
     void Update();
 
@@ -40,9 +43,12 @@ public:
 
     void Move();
 
+    void Dead();
+
     Camera3D getCamera() const;
     int getSize() const;
     Vector3 getPosition() const;
+    int getCurLives()const;
     
 
 };

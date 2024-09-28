@@ -1,17 +1,60 @@
 #include "detector.h"
 
-Detector::Detector(Vector3 initPos, float initRotation, Player &initPlayerRef,float initvDebth, float initvWidth,float initvAngle,float initRadius,float initHight,Color initBodyColor)
+Detector::Detector(Vector3 initPos, float initRotation, Player &initPlayerRef,float initvDebth,
+    float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed)
     :position(initPos),roationYaw(initRotation),playerRef(initPlayerRef),visionDebth(initvDebth),
-    visionWidth(initvWidth),visionAngle(initvAngle),bodyRadius(initRadius),bodyHight(initHight),bodyColor(initBodyColor){
+    visionWidth(initvWidth),visionAngle(initvAngle),potralPoints(initPotralPoints),potralSpeed(initpSpeed){
         defaultColor = Color{255,255,156,255}; //light yellow Color{255,255,156}
         detectColor = Color{255,77,0,255}; //Redish orange Color{255,77,0}
         coneColor = defaultColor;
+        potralIndex = 0;
+        bodyRadius =0.8f;
+        bodyHight = 1;
+        bodyColor = RED;
+        showDebugPoints = true;
+
+
     }
 
 void Detector::Update(){
-        Draw();
-        Collision();
+    Draw();
+    Collision();
+    Potral();
+    DebugDrawPotralPoints();
 }
+
+void Detector::Potral(){
+    Vector3 directToPoint = Vector3Subtract(potralPoints[potralIndex], position);
+    directToPoint = Vector3Normalize(directToPoint);
+    float stepSize = potralSpeed/30;
+    position = Vector3 { position.x + directToPoint.x * stepSize,
+                 position.y + directToPoint.y * stepSize,
+                 position.z + directToPoint.z * stepSize };
+
+    //Update Angle    
+    float angleRadians = atan2(potralPoints[potralIndex].z - position.z, potralPoints[potralIndex].x - position.x);
+    
+    roationYaw = (angleRadians * (180.0f / PI)) - 180;
+
+    if(Vector3DotProduct(directToPoint,potralPoints[potralIndex]) < 0)
+    {
+        potralIndex = getNextIndex();
+    }
+
+
+}
+
+void Detector::DebugDrawPotralPoints(){
+    if(!showDebugPoints){return;}
+
+    for(Vector3 vet3 : potralPoints)
+    {
+        DrawSphere(vet3,0.2f,PINK);
+    }
+
+
+}
+
 
 void Detector::Draw(){
     Draw3DTriangle(position,roationYaw,visionAngle,visionDebth,coneColor);
@@ -32,6 +75,7 @@ void Detector::Collision(){
     if (collision)
     {
         coneColor = detectColor;
+        playerRef.Dead();
     }else{
         coneColor = defaultColor;
     }
@@ -83,4 +127,12 @@ void Detector::GetTriangleVertices(Vector3 position, float rotation, float angle
         baseMidpoint.y,
         baseMidpoint.z - baseHalf * perpendicular.z
     };
+}
+
+int Detector::getNextIndex(){
+    if(potralIndex >= potralPoints.size()-1){
+        return 0;
+    }else{
+        return potralIndex+1;
+    }
 }

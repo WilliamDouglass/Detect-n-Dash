@@ -23,7 +23,7 @@
         
         collected = true;
         st.appendPoints();
-        std::cout << "Score From COllect: " << st.getPoint() << std::endl;
+        // std::cout << "Score From COllect: " << st.getPoint() << std::endl;
     }
 
     bool Coin::checkColission(const Player &playerRef){

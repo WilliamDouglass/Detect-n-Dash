@@ -27,8 +27,8 @@ int main(void)
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth = 1000;
+    const int screenHeight = 600;
 
     InitWindow(screenWidth, screenHeight, "game");  
 
@@ -44,13 +44,27 @@ int main(void)
     std::vector<Coin> coinList = initCoins(10,sTracker);
 
     Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{0,60,255,255});
+    
+    std::vector<Vector3> d1PotralPoints;
+    d1PotralPoints.push_back(Vector3{15,0,5});
+    d1PotralPoints.push_back(Vector3{6,0,-9});
+    d1PotralPoints.push_back(Vector3{-3,0,10});
 
-    Detector d1 (Vector3Zero(),90,mainPlayer,5,8,45,0.8f,1,RED);
+
+
+
+    Detector d1 (Vector3Zero(),0,mainPlayer,5,8,45,d1PotralPoints,2);
+
 
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
+    {   
+
+        if(IsKeyPressed(KEY_P))
+        {
+            mainPlayer.Dead();
+        }
 
         BeginDrawing();
 
@@ -58,12 +72,12 @@ int main(void)
             ClearBackground(BLACK);
 
                 
-                
                 BeginMode3D(mainPlayer.getCamera());
 
                 DrawCube(Vector3{3,0,0},1,1,1,GREEN);
 
                 d1.Update();
+
 
 
                 for (Coin& aCoin : coinList)

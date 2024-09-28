@@ -1,18 +1,20 @@
 #include "player.h"
 
      
-Player::Player(Vector3 startPos, float initSize, float initSpeed, Color initColor)
-    :playerPosition(startPos),size(initSize),runSpeed(initSpeed),playerCol(initColor){
+Player::Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor)
+    :startPos(initSartPos),size(initSize),runSpeed(initSpeed),playerCol(initColor){
         roation = 0;
         cameraOffset = (Vector3){0.0f, 4.0f, -8.0f};
-        camera.position = Vector3Add(playerPosition,cameraOffset);  // Camera position
-        camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
+        camera.position = Vector3Add(startPos,cameraOffset);  // Camera position
+        camera.target = (Vector3){ 0.0f, 1.0f, 0.0f };      // Camera looking at point
         camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
         camera.fovy = 45.0f;                                // Camera field-of-view Y
         camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
         walkSpeed = runSpeed/2;
         camSens = 0.0015f;
-
+        playerPosition = startPos;
+        maxLives = 3;
+        curLives = maxLives;
     }
 
 void Player::Update(){
@@ -41,6 +43,21 @@ void Player::Draw(){
     // DrawCube(playerPosition,size,size,size,playerCol);
     DrawCylinder(playerPosition,size,size,size,20,playerCol);
 }    
+
+void Player::Dead(){
+    //reset position
+    playerPosition = startPos;
+    curLives--;
+
+    //res camea
+    camera.position = Vector3Add(playerPosition,cameraOffset);  // Camera position
+    camera.target = (Vector3){ 0.0f, 1.0f, 0.0f };      // Camera looking at point
+    
+    if(curLives <= 0){
+        std::cout << "[PlayerDead]" << std::endl;
+    }
+}
+
 
 
 void Player::Move(){
@@ -82,7 +99,9 @@ void Player::Move(){
     
 }
 
+
 Camera3D Player::getCamera() const {return camera;}
 int Player::getSize() const {return size;}
 Vector3 Player::getPosition() const{return playerPosition;}
+int Player::getCurLives()const{return curLives;}
 
