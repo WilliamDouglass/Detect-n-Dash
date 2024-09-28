@@ -7,6 +7,8 @@
 #include "detector.h"
 
 
+
+
 std::vector<Coin> initCoins(int numCoins, ScoreTracker& st){
     
     std::vector<Coin> coinList;
@@ -41,10 +43,10 @@ int main(void)
     ScoreTracker sTracker;
     std::vector<Coin> coinList = initCoins(10,sTracker);
 
-    Player mainPlayer (Vector3{0,0,0},1,0.03f,MAROON);
+    Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{0,60,255,255});
 
+    Detector d1 (Vector3Zero(),90,mainPlayer,5,8,45,0.8f,1,RED);
 
-    Detector d1 (Vector2{0.0f,0.0f},2,mainPlayer,5.0f,4.0f,10.0f);
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -54,17 +56,14 @@ int main(void)
 
         DrawText(("Score: " + std::to_string(sTracker.getPoint())).c_str(), 5,30,20,WHITE);
             ClearBackground(BLACK);
+
+                
                 
                 BeginMode3D(mainPlayer.getCamera());
 
-                Vector2 position = {0,0};
+                DrawCube(Vector3{3,0,0},1,1,1,GREEN);
 
-                Vector3 centerPoint = { position.x, 0, position.y }; // Center vertex (bottom)
-                Vector3  topLeftPoint = {1,1,1};
-                Vector3 topRightPoint = {-1,1,1};
-
-                    // Draw the triangle
-                DrawTriangle3D(centerPoint, topRightPoint, topLeftPoint, YELLOW);
+                d1.Update();
 
 
                 for (Coin& aCoin : coinList)

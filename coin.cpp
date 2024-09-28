@@ -4,7 +4,7 @@
     Coin::Coin(Vector3 aPos, ScoreTracker &aST)
     :position(aPos), st(aST){
         radius = 0.5f;
-        position.y += radius + 0.5;
+        position.y += radius + 0.3;
         coinColor = GOLD;
         collected = false;
     }
@@ -27,7 +27,7 @@
     }
 
     bool Coin::checkColission(const Player &playerRef){
-        if(!collected && CheckCollisionSpheres(position,radius,playerRef.getPosition(),playerRef.getSize()))
+        if(!collected && CheckCollisionSpheres(position,radius,playerRef.getPosition(),playerRef.getSize()+1))
         {
             Collect();
             return true;

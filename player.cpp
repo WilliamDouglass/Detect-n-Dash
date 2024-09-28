@@ -1,7 +1,7 @@
 #include "player.h"
 
      
-Player::Player(Vector3 startPos, int initSize, float initSpeed, Color initColor)
+Player::Player(Vector3 startPos, float initSize, float initSpeed, Color initColor)
     :playerPosition(startPos),size(initSize),runSpeed(initSpeed),playerCol(initColor){
         roation = 0;
         cameraOffset = (Vector3){0.0f, 4.0f, -8.0f};
@@ -11,6 +11,7 @@ Player::Player(Vector3 startPos, int initSize, float initSpeed, Color initColor)
         camera.fovy = 45.0f;                                // Camera field-of-view Y
         camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
         walkSpeed = runSpeed/2;
+        camSens = 0.0015f;
 
     }
 
@@ -22,7 +23,7 @@ void Player::Update(){
 
 void Player::HandleCamera(){
     Vector2 mousePositionDelta = GetMouseDelta();
-    CameraYaw(&camera, -mousePositionDelta.x*0.003f, true);
+    CameraYaw(&camera, -mousePositionDelta.x*camSens, true);
     camera.position.y = playerPosition.y + cameraOffset.y;
 
     forward = {

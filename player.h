@@ -20,16 +20,17 @@ private:
     
     
     
-    int size;
+    float size;
     float speed;
     float runSpeed;
     float walkSpeed;
     Color playerCol;
+    float camSens;
     
          
 
 public:
-    Player(Vector3 startPos, int initSize, float initSpeed, Color initColor);
+    Player(Vector3 startPos, float initSize, float initSpeed, Color initColor);
 
     void Update();
 
