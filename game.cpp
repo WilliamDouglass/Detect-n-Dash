@@ -1,6 +1,13 @@
 
 #include "raylib.h"
 #include "player.h"
+#include "coin.h"
+#include "scoreTracker.h"
+
+
+
+
+
 
 int main(void)
 {
@@ -19,7 +26,11 @@ int main(void)
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
+    ScoreTracker sTracker;
+    Coin aCoin (Vector3{5,0,0}, sTracker);
+
     Player mainPlayer (Vector3{0,0,0},1,0.03f,MAROON);
+
 
 
     // Main game loop
@@ -30,8 +41,10 @@ int main(void)
 
             ClearBackground(BLACK);
                 BeginMode3D(mainPlayer.getCamera());
-
+                aCoin.checkColission(mainPlayer);
+                aCoin.Update();
                 mainPlayer.Update();
+                
 
 
                 DrawGrid(50, 1.0f);

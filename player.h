@@ -13,8 +13,9 @@ private:
     Camera3D camera;
     Vector3 cameraOffset;
     Vector2 forward;
-    float cameraYaw = 0.0f; 
-    float cameraPitch = 0.0f;
+    // float cameraYaw = 0.0f; 
+    // float cameraPitch = 0.0f;
+    // Rectangle collisionBox;
     
     
     
@@ -36,6 +37,8 @@ public:
     void Move();
 
     Camera3D getCamera() const;
+    int getSize() const;
+    Vector3 getPosition() const;
     
 
 };
