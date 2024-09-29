@@ -247,10 +247,10 @@ void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, 
 
 
     std::string scoreText = "Score: " + std::to_string(sTracker.getPoint());
-    DrawText(scoreText.c_str(), 10 , GetScreenHeight() - 50, 40, DARKGRAY);
+    DrawText(scoreText.c_str(), 10 , GetScreenHeight() - 50, 30, DARKGRAY);
 
     const char* timeString = TextFormat("Timer Remaining: %.2f", sTracker.getTimmer());
-    DrawText(timeString, 10 , GetScreenHeight() - 100, 40, DARKGRAY);
+    DrawText(timeString, 10 , GetScreenHeight() - 100, 30, DARKGRAY);
     
     DrawText("Quit",quitButton.x + 135,quitButton.y+5,40,DARKGRAY);
 
@@ -266,8 +266,8 @@ int main(void)
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 1000;
-    const int screenHeight = 600;
+    const int screenWidth = 925;
+    const int screenHeight = 520;
 
     InitWindow(screenWidth, screenHeight, "game");
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
