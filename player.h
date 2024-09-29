@@ -14,6 +14,11 @@ private:
     Camera3D camera;
     Vector3 cameraOffset;
     Vector2 forward;
+    enum MenuPages{
+        MainPage,
+        GamePage,
+        ScorePage
+    };
 
    
     
@@ -28,6 +33,7 @@ private:
     int maxLives;
     int curLives;
     Vector3 startPos;
+    bool playerDead;
 
     
          
@@ -49,6 +55,7 @@ public:
     int getSize() const;
     Vector3 getPosition() const;
     int getCurLives()const;
+    bool isDead()const;
     
 
 };

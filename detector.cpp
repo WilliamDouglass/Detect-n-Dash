@@ -1,5 +1,7 @@
 #include "detector.h"
 
+
+
 Detector::Detector(Vector3 initPos, float initRotation, Player &initPlayerRef,float initvDebth,
     float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed)
     :position(initPos),roationYaw(initRotation),playerRef(initPlayerRef),visionDebth(initvDebth),

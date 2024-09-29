@@ -15,6 +15,7 @@ Player::Player(Vector3 initSartPos, float initSize, float initSpeed, Color initC
         playerPosition = startPos;
         maxLives = 3;
         curLives = maxLives;
+        playerDead = false;
     }
 
 void Player::Update(){
@@ -55,6 +56,7 @@ void Player::Dead(){
     
     if(curLives <= 0){
         std::cout << "[PlayerDead]" << std::endl;
+        playerDead = true;
     }
 }
 
@@ -104,4 +106,5 @@ Camera3D Player::getCamera() const {return camera;}
 int Player::getSize() const {return size;}
 Vector3 Player::getPosition() const{return playerPosition;}
 int Player::getCurLives()const{return curLives;}
+bool Player::isDead()const{return playerDead;}
 
