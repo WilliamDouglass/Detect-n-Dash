@@ -54,6 +54,13 @@ void MainMenu(MenuPages &curPage,Rectangle playButton, Rectangle quitButton, boo
 
 
     BeginDrawing();
+    const char* GameTitle = "Detect n Dash";
+    int fontSize = 50;
+    int textWidth = MeasureText(GameTitle, fontSize);
+    int centerX = (GetScreenWidth() - textWidth) / 2;
+    int centerY = (GetScreenHeight() / 2 - fontSize / 2) - 50; 
+    DrawText(GameTitle, centerX, centerY, fontSize, Color{216,68,68,255});
+
     ClearBackground(LIGHTGRAY);
     int hoverAlpha = 150;
 
@@ -83,16 +90,16 @@ void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coin
     sTracker.UpdateTimmer();
 
         BeginDrawing();
-        DrawText(("Score: " + std::to_string(sTracker.getPoint())).c_str(), 5,30,20,WHITE);
-        DrawText(("Lives: " + std::to_string(mainPlayer.getCurLives())).c_str(), 5,50,20,WHITE);
+            ClearBackground(BLACK);
+        
+        DrawText(("Score: " + std::to_string(sTracker.getPoint())).c_str(), 5,30,20,GREEN);
+        DrawText(("Lives: " + std::to_string(mainPlayer.getCurLives())).c_str(), 5,50,20,GREEN);
         const char* text = TextFormat("%.1f", sTracker.getTimmer());
         int textWidth = MeasureText(text, 20);
-        DrawText(text, (GetScreenWidth() - textWidth) / 2, 20, 20, MAROON); // Draw text
-
-            ClearBackground(BLACK);
-
-                
+        DrawText(text, (GetScreenWidth() - textWidth) / 2, 20, 20, MAROON); 
+        
                 BeginMode3D(mainPlayer.getCamera());
+
                 DrawCylinder(Vector3Zero(),1.5,1.5,-0.3,20,Color{70,157,255,255});
 
                 if (sTracker.getTimmer() < 0 || sTracker.getPoint() >= maxCoins)
@@ -204,12 +211,27 @@ void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, 
         closeWin = true;
     }
 
+    const char* mainText;
+    if (sTracker.getPoint() >= numCoins)
+    {
+        mainText = "Congrats You Collected all the Coins";
+    }else{
+        mainText = TextFormat("Lookes like you missed %d coins try again?", numCoins - sTracker.getPoint() );
+    }
+    
 
     BeginDrawing();
     ClearBackground(LIGHTGRAY);
-    
-    int hoverAlpha = 150;
+    // Define font size for the text
+    int fontSize = 20;
+    int textWidth = MeasureText(mainText, fontSize);
+    int centerX = (GetScreenWidth() - textWidth) / 2;
+    int centerY = GetScreenHeight() / 2 - fontSize / 2; // Roughly center the text vertically
+    DrawText(mainText, centerX, centerY, fontSize, DARKGRAY);
 
+
+    //buttons
+    int hoverAlpha = 150;
     if(resetHover){
         DrawRectangleRec(resetButton,Color{70,157,255,static_cast<unsigned char>(hoverAlpha)});
     }else{
@@ -265,7 +287,7 @@ int main(void)
 
     float timeLimit = 1.5*60; //in seconds
     ScoreTracker sTracker(timeLimit);
-    int numCoins = 30;
+    int numCoins = 20;
     std::vector<Coin> coinList = initCoins(numCoins,sTracker);
 
     Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{0,60,255,255});

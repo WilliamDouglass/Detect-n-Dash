@@ -13,7 +13,7 @@ Detector::Detector(float initRotation, Player &initPlayerRef,float initvDebth,
         bodyRadius =0.8f;
         bodyHight = 1;
         bodyColor = RED;
-        showDebugPoints = true;
+        showDebugPoints = false;
         startPos = potralPoints[0];
         position = Vector3{startPos.x,startPos.y,startPos.z+1.0f};
 
