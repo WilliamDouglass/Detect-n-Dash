@@ -23,6 +23,9 @@
 3. Complete the challenge with only 3 lives—if you lose them all, it's game over.
 4. Collect all coins in the fastest time possible.
 
+### Game Demo
+Youtube: https://youtu.be/ZNxVVlriMxo
+
 ### Installation and Running the Game:
 
 1. Download and install [Raylib](https://www.raylib.com/).
