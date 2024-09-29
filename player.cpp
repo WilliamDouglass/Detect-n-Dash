@@ -16,9 +16,14 @@ Player::Player(Vector3 initSartPos, float initSize, float initSpeed, Color initC
         maxLives = 3;
         curLives = maxLives;
         playerDead = false;
+        iFrams = 2; // 2 sec of I frames
+        timmer = 0;
     }
 
 void Player::Update(){
+    if(!(timmer >= iFrams)){
+        timmer += GetFrameTime();
+    }
     HandleCamera();
     Move();
     Draw();
@@ -39,14 +44,27 @@ void Player::HandleCamera(){
 }
 
 void Player::Draw(){
-    // DrawCube(playerPosition,size,size,size,playerCol);
+    if(iFrams >= timmer)
+    {
+        playerCol.a = 150;
+    }else{
+        playerCol.a = 255;
+    }
+
     DrawCylinder(playerPosition,size,size,size,20,playerCol);
 }    
 
-void Player::Dead(){
+void Player::Dead(bool force){
+    if (force)
+    {
+        curLives = 0;
+    }
+    
+    if(iFrams >= timmer){return;} // in i frames
     //reset position
     playerPosition = startPos;
     curLives--;
+    timmer = 0;
 
     //res camea
     camera.position = Vector3Add(playerPosition,cameraOffset);  // Camera position
@@ -57,8 +75,6 @@ void Player::Dead(){
         playerDead = true;
     }
 }
-
-
 
 void Player::Move(){
     if (IsKeyDown(KEY_LEFT_SHIFT))
@@ -101,7 +117,9 @@ void Player::Move(){
 
 
 void Player::Reset()
-{
+{   
+    timmer = 0;
+
     //alive 
     playerDead = false;
     //position
@@ -121,3 +139,4 @@ Vector3 Player::getPosition() const{return playerPosition;}
 int Player::getCurLives()const{return curLives;}
 bool Player::isDead()const{return playerDead;}
 
+bool Player::isInIFrames()const{return (iFrams >= timmer);}

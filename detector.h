@@ -25,6 +25,7 @@ class Detector{
     int potralIndex;
     std::vector<Vector3> potralPoints;
     float potralSpeed;
+    Vector3 startPos;
 
     //DEBUG
     bool showDebugPoints;
@@ -43,7 +44,7 @@ class Detector{
     int getNextIndex();
     
     public:
-    Detector(Vector3 initPos, float initRotation, Player &initPlayerRef,float initvDebth,
+    Detector(float initRotation, Player &initPlayerRef,float initvDebth,
     float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed);
 
     void Update();

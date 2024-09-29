@@ -27,8 +27,9 @@
     }
 
     bool Coin::checkColission(const Player &playerRef){
+        if(playerRef.isInIFrames()){return false;}
         if(!collected && CheckCollisionSpheres(position,radius,playerRef.getPosition(),playerRef.getSize()+1))
-        {
+        {   
             Collect();
             return true;
         }

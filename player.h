@@ -35,10 +35,12 @@ private:
     Vector3 startPos;
     bool playerDead;
 
-    
+    float timmer;
+    float iFrams;
          
 
 public:
+    
     Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor);
 
     void Update();
@@ -49,7 +51,7 @@ public:
 
     void Move();
 
-    void Dead();
+    void Dead(bool force);
 
     void Reset();
 
@@ -58,6 +60,8 @@ public:
     Vector3 getPosition() const;
     int getCurLives()const;
     bool isDead()const;
+
+    bool isInIFrames() const;
     
 
 };

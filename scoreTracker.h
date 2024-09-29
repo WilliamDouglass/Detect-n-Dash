@@ -8,16 +8,25 @@ class ScoreTracker
 {
 private:
     int playerPoints;
+    float timmerStart;
+    float timmer;
+    bool stopTimmer;
 
 
 public:
-    ScoreTracker();
+    ScoreTracker(float initTime);
+
+    void UpdateTimmer();
     
     void appendPoints();
 
-    void resetPoints();
+    void reset();
 
     int getPoint() const;
+
+    float getTimmer() const;
+
+    void setTimmerStop(bool status);
 
 
 };

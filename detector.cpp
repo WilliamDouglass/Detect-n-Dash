@@ -2,9 +2,9 @@
 
 
 
-Detector::Detector(Vector3 initPos, float initRotation, Player &initPlayerRef,float initvDebth,
+Detector::Detector(float initRotation, Player &initPlayerRef,float initvDebth,
     float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed)
-    :position(initPos),roationYaw(initRotation),playerRef(initPlayerRef),visionDebth(initvDebth),
+    :roationYaw(initRotation),playerRef(initPlayerRef),visionDebth(initvDebth),
     visionWidth(initvWidth),visionAngle(initvAngle),potralPoints(initPotralPoints),potralSpeed(initpSpeed){
         defaultColor = Color{255,255,156,255}; //light yellow Color{255,255,156}
         detectColor = Color{255,77,0,255}; //Redish orange Color{255,77,0}
@@ -14,7 +14,8 @@ Detector::Detector(Vector3 initPos, float initRotation, Player &initPlayerRef,fl
         bodyHight = 1;
         bodyColor = RED;
         showDebugPoints = true;
-
+        startPos = potralPoints[0];
+        position = Vector3{startPos.x,startPos.y,startPos.z+1.0f};
 
     }
 
@@ -57,7 +58,6 @@ void Detector::DebugDrawPotralPoints(){
 
 }
 
-
 void Detector::Draw(){
     Draw3DTriangle(position,roationYaw,visionAngle,visionDebth,coneColor);
     DrawCylinder(position,bodyRadius/1.5,bodyRadius,bodyHight,20,bodyColor);
@@ -77,7 +77,7 @@ void Detector::Collision(){
     if (collision)
     {
         coneColor = detectColor;
-        playerRef.Dead();
+        playerRef.Dead(false);
     }else{
         coneColor = defaultColor;
     }
@@ -132,7 +132,7 @@ void Detector::GetTriangleVertices(Vector3 position, float rotation, float angle
 }
 
 int Detector::getNextIndex(){
-    if(static_cast<std::vector<Vector3>::size_type>(potralIndex) >= potralPoints.size()-1){
+    if(static_cast<std::vector<Vector3>::size_type>(potralIndex) > potralPoints.size()-1){
         return 0;
     }else{
         return potralIndex+1;
