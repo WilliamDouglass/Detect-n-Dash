@@ -38,8 +38,6 @@ void Player::HandleCamera(){
 
 }
 
-
-
 void Player::Draw(){
     // DrawCube(playerPosition,size,size,size,playerCol);
     DrawCylinder(playerPosition,size,size,size,20,playerCol);
@@ -99,6 +97,21 @@ void Player::Move(){
         camera.position.z += forward.x * speed;
     }
     
+}
+
+
+void Player::Reset()
+{
+    //alive 
+    playerDead = false;
+    //position
+    playerPosition = startPos;
+    //camera
+    camera.position = Vector3Add(playerPosition,cameraOffset);  // Camera position
+    camera.target = (Vector3){ 0.0f, 1.0f, 0.0f };      // Camera looking at point
+    
+    //lives
+    curLives = maxLives;
 }
 
 

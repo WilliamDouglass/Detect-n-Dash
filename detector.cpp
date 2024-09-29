@@ -132,7 +132,7 @@ void Detector::GetTriangleVertices(Vector3 position, float rotation, float angle
 }
 
 int Detector::getNextIndex(){
-    if(potralIndex >= potralPoints.size()-1){
+    if(static_cast<std::vector<Vector3>::size_type>(potralIndex) >= potralPoints.size()-1){
         return 0;
     }else{
         return potralIndex+1;

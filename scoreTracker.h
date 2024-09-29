@@ -15,7 +15,10 @@ public:
     
     void appendPoints();
 
+    void resetPoints();
+
     int getPoint() const;
+
 
 };
 

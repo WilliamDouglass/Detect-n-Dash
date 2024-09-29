@@ -11,3 +11,7 @@ int ScoreTracker::getPoint() const {
     return playerPoints;
 }
 
+void ScoreTracker::resetPoints(){
+    playerPoints = 0;
+}
+

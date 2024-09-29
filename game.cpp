@@ -15,11 +15,12 @@
 std::vector<Coin> initCoins(int numCoins, ScoreTracker& st){
     
     std::vector<Coin> coinList;
+    int range = 20;
 
     
     for (int i = 0; i < numCoins; i++)
     {
-        coinList.emplace_back(Vector3{(float)GetRandomValue(-10,10),0,(float)GetRandomValue(-10,10)},st);
+        coinList.emplace_back(Vector3{(float)GetRandomValue(-range,range),0,(float)GetRandomValue(-range,range)},st);
     }
     return coinList;
 }
@@ -46,7 +47,7 @@ void MainMenu(MenuPages &curPage,Rectangle playButton, Rectangle quitButton, boo
     if (quitHover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {   
         //TODO
-        // closeWin = true;
+        closeWin = true;
         // return;
     }
     
@@ -116,19 +117,35 @@ void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coin
 
 }
 
-void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle continueButton,MenuPages &curPage){
+void ResetGame(Player &mainPlayer, ScoreTracker &sTracker,std::vector<Coin> &coinList,int numCoins){
+    //res player
+    mainPlayer.Reset();
+    coinList = initCoins(numCoins,sTracker);
+    sTracker.resetPoints();
+}
+
+void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle continueButton, Rectangle quitButton,MenuPages &curPage,bool &closeWin,std::vector<Coin> &coinList,int numCoins){
     if (IsCursorHidden())
     {
         EnableCursor();
     }
     
-    int points = sTracker.getPoint();
     Vector2 mousePos = GetMousePosition();
     bool continueHover = CheckCollisionPointRec(mousePos,continueButton);
+    bool quitHover = CheckCollisionPointRec(mousePos,quitButton);
+
 
     if (continueHover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {   
         curPage = GamePage;
+        ResetGame(mainPlayer,sTracker,coinList,numCoins);
+
+    }
+    if (quitHover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {   
+        //TODO
+        closeWin = true;
+        // return;
     }
 
 
@@ -142,12 +159,19 @@ void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle continueButto
     }else{
         DrawRectangleRec(continueButton,Color{70,157,255,200});
     }
+    if(quitHover){
+        DrawRectangleRec(quitButton,Color{70,157,255,static_cast<unsigned char>(hoverAlpha)});
+    }else{
+        DrawRectangleRec(quitButton,Color{70,157,255,200});
+    }
 
     DrawText("Continue?",continueButton.x + 70,continueButton.y+5,40,DARKGRAY);
 
 
     std::string scoreText = "Score: " + std::to_string(sTracker.getPoint());
     DrawText(scoreText.c_str(), 10 , GetScreenHeight() - 50, 40, DARKGRAY);
+    DrawText("Quit",quitButton.x + 135,quitButton.y+5,40,DARKGRAY);
+
     
     EndDrawing();
 }
@@ -170,7 +194,7 @@ int main(void)
     float buttonHight = 50;
     Rectangle playButton = {screenWidth/2 - buttonWidth/2, screenHeight/2 + 30,buttonWidth,buttonHight};
     Rectangle quitButton = {screenWidth/2 - buttonWidth/2, screenHeight/2 + 100,buttonWidth,buttonHight};
-    MenuPages curPage = ScorePage;
+    MenuPages curPage = MainPage;
     bool closeWindow = false;
 
 
@@ -179,7 +203,8 @@ int main(void)
 
 
     ScoreTracker sTracker;
-    std::vector<Coin> coinList = initCoins(10,sTracker);
+    int numCoins = 30;
+    std::vector<Coin> coinList = initCoins(numCoins,sTracker);
 
     Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{0,60,255,255});
     
@@ -194,10 +219,10 @@ int main(void)
 
 
     // Main game loop
-    while (!WindowShouldClose() || closeWindow)    // Detect window close button or ESC key
+    while (!WindowShouldClose() && !closeWindow)    // Detect window close button or ESC key
     {   
         if(curPage == MainPage){
-            MainMenu(curPage,playButton,quitButton,closeWindow);
+            MainMenu(curPage,playButton,quitButton,closeWindow);            
         }
 
         if(curPage== GamePage){
@@ -209,13 +234,9 @@ int main(void)
         }
 
         if(curPage == ScorePage){
-            ScoreMenu(mainPlayer,sTracker,playButton,curPage);
+            ScoreMenu(mainPlayer,sTracker,playButton,quitButton,curPage,closeWindow,coinList,numCoins);
         }
     }
-
-
-
-
 
     CloseWindow();       
 

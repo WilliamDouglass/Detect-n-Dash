@@ -51,6 +51,8 @@ public:
 
     void Dead();
 
+    void Reset();
+
     Camera3D getCamera() const;
     int getSize() const;
     Vector3 getPosition() const;
