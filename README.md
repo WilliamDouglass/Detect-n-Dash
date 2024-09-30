@@ -24,7 +24,7 @@
 4. Collect all coins in the fastest time possible.
 
 ### Game Demo
-Youtube: https://youtu.be/ZNxVVlriMxo
+[Youtube Video](https://youtu.be/ZNxVVlriMxo)
 
 ### Installation and Running the Game:
 
