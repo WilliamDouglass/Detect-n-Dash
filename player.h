@@ -5,11 +5,14 @@
 #include <raymath.h>
 #include <rcamera.h>
 #include <iostream>
+#include "scoreTracker.h"
 
 class Player
 {
 private:
     Vector3 playerPosition;
+    Vector3 startPos;
+    float size;
     float roation;
     Camera3D camera;
     Vector3 cameraOffset;
@@ -19,11 +22,12 @@ private:
         GamePage,
         ScorePage
     };
+    Model playerModel;
 
    
     
     
-    float size;
+    
     float speed;
     float runSpeed;
     float walkSpeed;
@@ -32,16 +36,18 @@ private:
 
     int maxLives;
     int curLives;
-    Vector3 startPos;
+    
     bool playerDead;
 
     float timmer;
     float iFrams;
+
+    ScoreTracker &tracker;
          
 
 public:
     
-    Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor);
+    Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor, Model model,ScoreTracker &tracker);
 
     void Update();
 

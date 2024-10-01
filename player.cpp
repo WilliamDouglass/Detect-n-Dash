@@ -1,8 +1,8 @@
 #include "player.h"
 
      
-Player::Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor)
-    :startPos(initSartPos),size(initSize),runSpeed(initSpeed),playerCol(initColor){
+Player::Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor,Model model,ScoreTracker &sTracker)
+    :startPos(initSartPos),size(initSize),runSpeed(initSpeed),playerCol(initColor),playerModel(model), tracker(sTracker){
         roation = 0;
         cameraOffset = (Vector3){0.0f, 4.0f, -8.0f};
         camera.position = Vector3Add(startPos,cameraOffset);  // Camera position
@@ -52,7 +52,17 @@ void Player::Draw(){
         playerCol.a = 255;
     }
 
-    DrawCylinder(playerPosition,size,size,size,20,playerCol);
+    // DrawCylinder(playerPosition,size,size,size,20,playerCol);
+    roation = atan2(forward.y,forward.x) * (180.0f/PI) * -1;
+    roation += 90;
+    
+    //Ghost bobbing
+    float pos = playerPosition.y;
+    pos =sin(tracker.getTimmer()*3);
+    std::cout << "Y Position: " << pos << std::endl;
+    playerPosition.y += pos/90;
+
+    DrawModelEx(playerModel,playerPosition,Vector3{0,1,0},roation,Vector3One(),WHITE);
 }    
 
 void Player::Dead(bool force){
@@ -80,10 +90,10 @@ void Player::Dead(bool force){
 void Player::Move(){ //TODO FIX
     // const char* str = TextFormat("Forward ")
 
-std::cout 
-          << " POS: (" << playerPosition.x << ", " 
-          << playerPosition.y << ", " 
-          << playerPosition.z << ")" << std::endl;
+// std::cout 
+//           << " POS: (" << playerPosition.x << ", " 
+//           << playerPosition.y << ", " 
+//           << playerPosition.z << ")" << std::endl;
 
     Vector3 newPlayerPos = playerPosition;
     Vector3 newCamPos = camera.position;
@@ -118,17 +128,17 @@ std::cout
         newCamPos.z += forward.x * speed;
     }
 
-// For x-axis: Check if the player is within the range [-35, 35]
-if(newPlayerPos.x >= -35.0f && newPlayerPos.x <= 35.0f) {
-    playerPosition.x = newPlayerPos.x;
-    camera.position.x = newCamPos.x;
-}
+    // For x-axis: Check if the player is within the range [-35, 35]
+    if(newPlayerPos.x >= -35.0f && newPlayerPos.x <= 35.0f) {
+        playerPosition.x = newPlayerPos.x;
+        camera.position.x = newCamPos.x;
+    }
 
-// For z-axis: Check if the player is within the range [-35, 35]
-if(newPlayerPos.z >= -35.0f && newPlayerPos.z <= 35.0f) {
-    playerPosition.z = newPlayerPos.z;
-    camera.position.z = newCamPos.z;
-}
+    // For z-axis: Check if the player is within the range [-35, 35]
+    if(newPlayerPos.z >= -35.0f && newPlayerPos.z <= 35.0f) {
+        playerPosition.z = newPlayerPos.z;
+        camera.position.z = newCamPos.z;
+    }
 
 
 }

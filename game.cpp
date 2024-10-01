@@ -7,6 +7,7 @@
 #include "detector.h"
 #include <iostream>
 #include <string>
+#include <sstream>
 
 
 
@@ -80,7 +81,7 @@ void MainMenu(MenuPages &curPage,Rectangle playButton, Rectangle quitButton, boo
     EndDrawing();
 }
 
-void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coinList, std::vector<Detector> &dList, int maxCoins, Texture2D ground)
+void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coinList, std::vector<Detector> &dList, int maxCoins, std::vector<Model> enviorment)
 {   
     if (!IsCursorHidden())
     {
@@ -94,7 +95,13 @@ void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coin
             ClearBackground(BLACK);
     
                 BeginMode3D(mainPlayer.getCamera());   
-                DrawCube(Vector3{0,-0.501,0},70,1,70,Color{118, 133, 103,255});
+
+                for (int i = 0; i < enviorment.size(); i++)
+                {
+                    DrawModel(enviorment[i],Vector3{0,-0.5f,0},2.0f,WHITE);
+                }
+                
+
 
                 if (sTracker.getTimmer() < 0 || sTracker.getPoint() >= maxCoins)
                 {
@@ -159,7 +166,7 @@ Vector3 getRandV3(int min, int max){
 void initDetector(std::vector<Detector> &dList,Player &mainPlayer, Model Skull, Model Pumk, Texture2D tex)
 {
     int numMinDect = 10;
-    int numMaxDect = 10;
+    int numMaxDect = 15;
     // Initialize the Detector objects
     for (int i = 0; i < GetRandomValue(numMinDect,numMaxDect); ++i) {
         // You can modify the initPos or other parameters based on `i` if needed
@@ -293,12 +300,31 @@ int main(void)
     //---------------------------------------------------------------------------------------
 
     //assets
+    Texture2D tex = LoadTexture("Assets/halloweenbits_texture.png");
+    
     Model skullModel = LoadModel("Assets/skull.obj");
     Model jackOLanternModel = LoadModel("Assets/pumpkin_orange_jackolantern.obj");
-    Texture2D tex = LoadTexture("Assets/halloweenbits_texture.png");
-    Texture2D groundTex = LoadTexture("Assets/Ground.jpg");
+    Model ghostModel = LoadModel("Assets/Player.obj");
+    
     skullModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
     jackOLanternModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
+    ghostModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
+  
+
+    std::vector<Model> environmentModels;
+    // Specify the range of model indices
+    const int startIndex = 0;
+    const int endIndex = 20; // Load models from 0 to 5 (inclusive)
+
+    // Load models using a loop
+    for (int i = startIndex; i <= endIndex; i++) {
+        // Create the model file path dynamically
+        std::ostringstream modelFilePath;
+        modelFilePath << "Assets/Enviorment" << i << ".obj"; // Construct the file path
+        environmentModels.push_back(LoadModel(modelFilePath.str().c_str()));
+        environmentModels[i].materials->maps[MATERIAL_MAP_DIFFUSE].texture = tex;
+    }
+
 
 
     //Game init
@@ -307,7 +333,7 @@ int main(void)
     int numCoins = 20;
     std::vector<Coin> coinList = initCoins(numCoins,sTracker);
 
-    Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{148, 146, 192,255});
+    Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{148, 146, 192,255},ghostModel,sTracker);
 
     std::vector<Detector> detectors;
 
@@ -328,7 +354,7 @@ int main(void)
 
         if(curPage== GamePage){
 
-            Gameplay(mainPlayer,sTracker,coinList,detectors,numCoins,groundTex);
+            Gameplay(mainPlayer,sTracker,coinList,detectors,numCoins,environmentModels);
             if(mainPlayer.isDead())
             {
                 curPage = ScorePage;
