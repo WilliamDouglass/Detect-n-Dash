@@ -11,6 +11,7 @@ Player::Player(Vector3 initSartPos, float initSize, float initSpeed, Color initC
         camera.fovy = 45.0f;                                // Camera field-of-view Y
         camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
         walkSpeed = runSpeed/2;
+        speed = runSpeed;
         camSens = 0.0015f;
         playerPosition = startPos;
         maxLives = 3;
@@ -46,7 +47,7 @@ void Player::HandleCamera(){
 void Player::Draw(){
     if(iFrams >= timmer)
     {
-        playerCol.a = 150;
+        playerCol.a = 50;
     }else{
         playerCol.a = 255;
     }
@@ -76,43 +77,60 @@ void Player::Dead(bool force){
     }
 }
 
-void Player::Move(){
-    if (IsKeyDown(KEY_LEFT_SHIFT))
-    {
-        speed = walkSpeed;
-    }else{
-        speed = runSpeed;
+void Player::Move(){ //TODO FIX
+    // const char* str = TextFormat("Forward ")
+
+std::cout 
+          << " POS: (" << playerPosition.x << ", " 
+          << playerPosition.y << ", " 
+          << playerPosition.z << ")" << std::endl;
+
+    Vector3 newPlayerPos = playerPosition;
+    Vector3 newCamPos = camera.position;
+
+    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))
+    {   
+        newPlayerPos.x += forward.x * speed;
+        newPlayerPos.z += forward.y * speed;
+        newCamPos.x += forward.x * speed;
+        newCamPos.z += forward.y * speed;
     }
-    
-    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) // forward
+
+    if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) 
     {
-        playerPosition.x += forward.x * speed;
-        playerPosition.z += forward.y * speed;
-        camera.position.x += forward.x * speed;
-        camera.position.z += forward.y * speed;
-    }
-    if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) // forward
-    {
-        playerPosition.x -= forward.x * speed;
-        playerPosition.z -= forward.y * speed;
-        camera.position.x -= forward.x * speed;
-        camera.position.z -= forward.y * speed;
+        newPlayerPos.x -= forward.x * speed;
+        newPlayerPos.z -= forward.y * speed;
+        newCamPos.x -= forward.x * speed;
+        newCamPos.z -= forward.y * speed;
     }
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))
     {
-        playerPosition.x += forward.y * speed;
-        playerPosition.z -= forward.x * speed;
-        camera.position.x += forward.y * speed;
-        camera.position.z -= forward.x * speed;
+        newPlayerPos.x += forward.y * speed;
+        newPlayerPos.z -= forward.x * speed;
+        newCamPos.x += forward.y * speed;
+        newCamPos.z -= forward.x * speed;
     }
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
     {
-        playerPosition.x -= forward.y * speed;
-        playerPosition.z += forward.x * speed;
-        camera.position.x -= forward.y * speed;
-        camera.position.z += forward.x * speed;
+        newPlayerPos.x -= forward.y * speed;
+        newPlayerPos.z += forward.x * speed;
+        newCamPos.x -= forward.y * speed;
+        newCamPos.z += forward.x * speed;
     }
-    
+
+// For x-axis: Check if the player is within the range [-35, 35]
+if(newPlayerPos.x >= -35.0f && newPlayerPos.x <= 35.0f) {
+    playerPosition.x = newPlayerPos.x;
+    camera.position.x = newCamPos.x;
+}
+
+// For z-axis: Check if the player is within the range [-35, 35]
+if(newPlayerPos.z >= -35.0f && newPlayerPos.z <= 35.0f) {
+    playerPosition.z = newPlayerPos.z;
+    camera.position.z = newCamPos.z;
+}
+
+
 }
 
 

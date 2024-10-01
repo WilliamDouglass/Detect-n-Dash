@@ -80,7 +80,7 @@ void MainMenu(MenuPages &curPage,Rectangle playButton, Rectangle quitButton, boo
     EndDrawing();
 }
 
-void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coinList, std::vector<Detector> &dList, int maxCoins)
+void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coinList, std::vector<Detector> &dList, int maxCoins, Texture2D ground)
 {   
     if (!IsCursorHidden())
     {
@@ -93,9 +93,8 @@ void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coin
         BeginDrawing();
             ClearBackground(BLACK);
     
-                BeginMode3D(mainPlayer.getCamera());
-
-                DrawCylinder(Vector3Zero(),1.5,1.5,-0.3,20,Color{70,157,255,255});
+                BeginMode3D(mainPlayer.getCamera());   
+                DrawCube(Vector3{0,-0.501,0},70,1,70,Color{118, 133, 103,255});
 
                 if (sTracker.getTimmer() < 0 || sTracker.getPoint() >= maxCoins)
                 {
@@ -119,7 +118,7 @@ void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coin
                 mainPlayer.Update();
                 
 
-                DrawGrid(80, 1.0f);
+                // DrawGrid(80, 1.0f);
                 
                 EndMode3D();
 
@@ -159,13 +158,13 @@ Vector3 getRandV3(int min, int max){
 
 void initDetector(std::vector<Detector> &dList,Player &mainPlayer, Model Skull, Model Pumk, Texture2D tex)
 {
-    int numMinDect = 2;
-    int numMaxDect = 2;
+    int numMinDect = 10;
+    int numMaxDect = 10;
     // Initialize the Detector objects
     for (int i = 0; i < GetRandomValue(numMinDect,numMaxDect); ++i) {
         // You can modify the initPos or other parameters based on `i` if needed
         std::vector<Vector3> initPotralPoints;
-        for(int p = 0; p < GetRandomValue(3,6);p++){ //Rand number of points
+        for(int p = 0; p < GetRandomValue(5,9);p++){ //Rand number of points
             initPotralPoints.push_back(getRandV3(4.0f,30.0f)); // Position of the points
         }
         Model curModel;
@@ -297,8 +296,10 @@ int main(void)
     Model skullModel = LoadModel("Assets/skull.obj");
     Model jackOLanternModel = LoadModel("Assets/pumpkin_orange_jackolantern.obj");
     Texture2D tex = LoadTexture("Assets/halloweenbits_texture.png");
+    Texture2D groundTex = LoadTexture("Assets/Ground.jpg");
     skullModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
     jackOLanternModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
+
 
     //Game init
     float timeLimit = 1.5*60; //in seconds
@@ -306,7 +307,7 @@ int main(void)
     int numCoins = 20;
     std::vector<Coin> coinList = initCoins(numCoins,sTracker);
 
-    Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{0,60,255,255});
+    Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{148, 146, 192,255});
 
     std::vector<Detector> detectors;
 
@@ -327,7 +328,7 @@ int main(void)
 
         if(curPage== GamePage){
 
-            Gameplay(mainPlayer,sTracker,coinList,detectors,numCoins);
+            Gameplay(mainPlayer,sTracker,coinList,detectors,numCoins,groundTex);
             if(mainPlayer.isDead())
             {
                 curPage = ScorePage;

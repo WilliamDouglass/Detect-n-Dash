@@ -20,10 +20,6 @@ Detector::Detector(float initRotation, Player &initPlayerRef,float initvDebth,
     }
 
 void Detector::Update(){
-
-
-
-
     Collision();
     Potral();
     DebugDrawPotralPoints();
@@ -67,7 +63,7 @@ void Detector::DebugDrawPotralPoints(){
 
 void Detector::Draw(){
     Draw3DTriangle(position,roationYaw,visionAngle,visionDebth,coneColor);
-    std::cout << "  Rot: " << roationYaw  << std::endl;
+    // std::cout << "  Rot: " << roationYaw  << std::endl;
     DrawModelEx(model,position,Vector3{0,1,0}, -(roationYaw + 90) ,Vector3One(),WHITE);
     // DrawCylinder(position,bodyRadius/1.5,bodyRadius,bodyHight,20,bodyColor);
 }
@@ -100,6 +96,7 @@ void Detector::Draw3DTriangle(Vector3 position, float rotation, float angle, flo
     // DrawSphere(vertices[0],0.3f,BLUE);
     // DrawSphere(vertices[1],0.3f,RED);
     // DrawSphere(vertices[2],0.3f,PINK);
+    aColor = Color{aColor.r,aColor.g,aColor.b, 50};
 
     // Draw the triangle
     DrawTriangle3D(vertices[1], vertices[0], vertices[2], aColor);
