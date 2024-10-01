@@ -85,19 +85,14 @@ void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coin
     if (!IsCursorHidden())
     {
         DisableCursor();
+        // EnableCursor();
     }
 
     sTracker.UpdateTimmer();
 
         BeginDrawing();
             ClearBackground(BLACK);
-        
-        DrawText(("Score: " + std::to_string(sTracker.getPoint())).c_str(), 5,30,20,GREEN);
-        DrawText(("Lives: " + std::to_string(mainPlayer.getCurLives())).c_str(), 5,50,20,GREEN);
-        const char* text = TextFormat("%.1f", sTracker.getTimmer());
-        int textWidth = MeasureText(text, 20);
-        DrawText(text, (GetScreenWidth() - textWidth) / 2, 20, 20, MAROON); 
-        
+    
                 BeginMode3D(mainPlayer.getCamera());
 
                 DrawCylinder(Vector3Zero(),1.5,1.5,-0.3,20,Color{70,157,255,255});
@@ -128,6 +123,12 @@ void Gameplay(Player &mainPlayer,ScoreTracker &sTracker, std::vector<Coin> &coin
                 
                 EndMode3D();
 
+            //UI
+            DrawText(("Score: " + std::to_string(sTracker.getPoint())).c_str(), 5,30,20,GREEN);
+            DrawText(("Lives: " + std::to_string(mainPlayer.getCurLives())).c_str(), 5,50,20,GREEN);
+            const char* text = TextFormat("%.1f", sTracker.getTimmer());
+            int textWidth = MeasureText(text, 20);
+            DrawText(text, (GetScreenWidth() - textWidth) / 2, 20, 20, MAROON); 
             DrawFPS(10, 10);
         EndDrawing();
 
@@ -156,10 +157,10 @@ Vector3 getRandV3(int min, int max){
 }
 
 
-void initDetector(std::vector<Detector> &dList,Player &mainPlayer)
+void initDetector(std::vector<Detector> &dList,Player &mainPlayer, Model Skull, Model Pumk, Texture2D tex)
 {
-    int numMinDect = 6;
-    int numMaxDect = 10;
+    int numMinDect = 2;
+    int numMaxDect = 2;
     // Initialize the Detector objects
     for (int i = 0; i < GetRandomValue(numMinDect,numMaxDect); ++i) {
         // You can modify the initPos or other parameters based on `i` if needed
@@ -167,28 +168,36 @@ void initDetector(std::vector<Detector> &dList,Player &mainPlayer)
         for(int p = 0; p < GetRandomValue(3,6);p++){ //Rand number of points
             initPotralPoints.push_back(getRandV3(4.0f,30.0f)); // Position of the points
         }
+        Model curModel;
+        if(GetRandomValue(0,1))
+        {
+            curModel = Skull;
+        }else{
+            curModel = Pumk;
+        }
+        
+
 
 //Refrance for Below
 //float initRotation, Player &initPlayerRef,float initvDebth,
 //float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed
         Detector newDetector(
             0, mainPlayer, GetRandomValue(4,7),
-             GetRandomValue(4,6), GetRandomValue(50,100), initPotralPoints, getRandFloat(4,8,true));
+             GetRandomValue(4,6), GetRandomValue(50,100), initPotralPoints, getRandFloat(4,8,true),curModel,tex);
         dList.push_back(newDetector); // Add the new Detector to the vector
     }
 }
 
-void ResetGame(Player &mainPlayer, ScoreTracker &sTracker,std::vector<Coin> &coinList,int numCoins,std::vector<Detector> &dList){
+void ResetGame(Player &mainPlayer, ScoreTracker &sTracker,std::vector<Coin> &coinList,int numCoins,std::vector<Detector> &dList, Model skull, Model pumk, Texture2D tex){
     //res player
     mainPlayer.Reset();
     coinList = initCoins(numCoins,sTracker);
     sTracker.reset();
     dList.clear();
-    initDetector(dList,mainPlayer);
-
+    initDetector(dList,mainPlayer,skull,pumk,tex);
 }
 
-void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, Rectangle quitButton,MenuPages &curPage,bool &closeWin,std::vector<Coin> &coinList,int numCoins,std::vector<Detector> &dList){
+void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, Rectangle quitButton,MenuPages &curPage,bool &closeWin,std::vector<Coin> &coinList,int numCoins,std::vector<Detector> &dList, Model skull, Model pumk, Texture2D tex){
     if (IsCursorHidden())
     {
         EnableCursor();
@@ -202,7 +211,7 @@ void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, 
     if (resetHover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {   
         curPage = GamePage;
-        ResetGame(mainPlayer,sTracker,coinList,numCoins, dList);
+        ResetGame(mainPlayer,sTracker,coinList,numCoins, dList, skull,pumk,tex);
 
     }
     if (quitHover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -283,8 +292,15 @@ int main(void)
 
 
     //---------------------------------------------------------------------------------------
-    //Game init
 
+    //assets
+    Model skullModel = LoadModel("Assets/skull.obj");
+    Model jackOLanternModel = LoadModel("Assets/pumpkin_orange_jackolantern.obj");
+    Texture2D tex = LoadTexture("Assets/halloweenbits_texture.png");
+    skullModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
+    jackOLanternModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
+
+    //Game init
     float timeLimit = 1.5*60; //in seconds
     ScoreTracker sTracker(timeLimit);
     int numCoins = 20;
@@ -294,7 +310,9 @@ int main(void)
 
     std::vector<Detector> detectors;
 
-    initDetector(detectors,mainPlayer);
+    initDetector(detectors,mainPlayer,skullModel,jackOLanternModel,tex);
+
+
 
     //---------------------------------------------------------------------------------------
 
@@ -308,6 +326,7 @@ int main(void)
         }
 
         if(curPage== GamePage){
+
             Gameplay(mainPlayer,sTracker,coinList,detectors,numCoins);
             if(mainPlayer.isDead())
             {
@@ -316,9 +335,13 @@ int main(void)
         }
 
         if(curPage == ScorePage){
-            ScoreMenu(mainPlayer,sTracker,playButton,quitButton,curPage,closeWindow,coinList,numCoins,detectors);
+            ScoreMenu(mainPlayer,sTracker,playButton,quitButton,curPage,closeWindow,coinList,numCoins,detectors,skullModel,jackOLanternModel,tex);
         }
     }
+
+    UnloadModel(skullModel);
+    UnloadModel(jackOLanternModel);
+    UnloadTexture(tex);
 
     CloseWindow();       
 

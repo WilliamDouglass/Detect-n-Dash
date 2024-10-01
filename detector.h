@@ -21,6 +21,10 @@ class Detector{
     float bodyHight;
     Color bodyColor;
 
+    //Model
+    Model model;
+    Texture2D tex;
+
     //Movement
     int potralIndex;
     std::vector<Vector3> potralPoints;
@@ -29,6 +33,7 @@ class Detector{
 
     //DEBUG
     bool showDebugPoints;
+    int test;
 
 
 
@@ -45,7 +50,7 @@ class Detector{
     
     public:
     Detector(float initRotation, Player &initPlayerRef,float initvDebth,
-    float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed);
+    float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed, Model aModel,Texture2D aTex);
 
     void Update();
 

@@ -3,9 +3,9 @@
 
 
 Detector::Detector(float initRotation, Player &initPlayerRef,float initvDebth,
-    float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed)
+    float initvWidth,float initvAngle,std::vector<Vector3> initPotralPoints, float initpSpeed, Model aModel,Texture2D aTex)
     :roationYaw(initRotation),playerRef(initPlayerRef),visionDebth(initvDebth),
-    visionWidth(initvWidth),visionAngle(initvAngle),potralPoints(initPotralPoints),potralSpeed(initpSpeed){
+    visionWidth(initvWidth),visionAngle(initvAngle),potralPoints(initPotralPoints),potralSpeed(initpSpeed),model(aModel),tex(aTex){
         defaultColor = Color{255,255,156,255}; //light yellow Color{255,255,156}
         detectColor = Color{255,77,0,255}; //Redish orange Color{255,77,0}
         coneColor = defaultColor;
@@ -20,13 +20,19 @@ Detector::Detector(float initRotation, Player &initPlayerRef,float initvDebth,
     }
 
 void Detector::Update(){
-    Draw();
+
+
+
+
     Collision();
     Potral();
     DebugDrawPotralPoints();
+    Draw();
 }
 
 void Detector::Potral(){
+
+    //Go to the Point
     Vector3 directToPoint = Vector3Subtract(potralPoints[potralIndex], position);
     directToPoint = Vector3Normalize(directToPoint);
     float stepSize = potralSpeed/30;
@@ -34,14 +40,15 @@ void Detector::Potral(){
                  position.y + directToPoint.y * stepSize,
                  position.z + directToPoint.z * stepSize };
 
-    //Update Angle    
-    float angleRadians = atan2(potralPoints[potralIndex].z - position.z, potralPoints[potralIndex].x - position.x);
     
-    roationYaw = (angleRadians * (180.0f / PI)) - 180;
-
+    //Arived at point
     if(Vector3DotProduct(directToPoint,potralPoints[potralIndex]) < 0)
-    {
+    {   
+        // position = potralPoints[potralIndex];
         potralIndex = getNextIndex();
+
+        float angleRadians = atan2(potralPoints[potralIndex].z - position.z, potralPoints[potralIndex].x - position.x);
+        roationYaw = (angleRadians * (180.0f / PI)) - 180;
     }
 
 
@@ -60,7 +67,9 @@ void Detector::DebugDrawPotralPoints(){
 
 void Detector::Draw(){
     Draw3DTriangle(position,roationYaw,visionAngle,visionDebth,coneColor);
-    DrawCylinder(position,bodyRadius/1.5,bodyRadius,bodyHight,20,bodyColor);
+    std::cout << "  Rot: " << roationYaw  << std::endl;
+    DrawModelEx(model,position,Vector3{0,1,0}, -(roationYaw + 90) ,Vector3One(),WHITE);
+    // DrawCylinder(position,bodyRadius/1.5,bodyRadius,bodyHight,20,bodyColor);
 }
 
 void Detector::Collision(){
@@ -132,9 +141,11 @@ void Detector::GetTriangleVertices(Vector3 position, float rotation, float angle
 }
 
 int Detector::getNextIndex(){
-    if(static_cast<std::vector<Vector3>::size_type>(potralIndex) > potralPoints.size()-1){
-        return 0;
+    int out;
+    if(static_cast<std::vector<Vector3>::size_type>(potralIndex) >= potralPoints.size()-1){
+        out = 0;
     }else{
-        return potralIndex+1;
+        out = potralIndex + 1;
     }
+    return out;
 }
