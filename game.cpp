@@ -13,7 +13,7 @@
 
 
 
-std::vector<Coin> initCoins(int numCoins, ScoreTracker& st){
+std::vector<Coin> initCoins(int numCoins, ScoreTracker& st, Model model){
     
     std::vector<Coin> coinList;
     int range = 25;
@@ -21,7 +21,7 @@ std::vector<Coin> initCoins(int numCoins, ScoreTracker& st){
     
     for (int i = 0; i < numCoins; i++)
     {
-        coinList.emplace_back(Vector3{(float)GetRandomValue(-range,range),0,(float)GetRandomValue(-range,range)},st);
+        coinList.emplace_back(Vector3{(float)GetRandomValue(-range,range),0,(float)GetRandomValue(-range,range)},st,model);
     }
     return coinList;
 }
@@ -165,8 +165,8 @@ Vector3 getRandV3(int min, int max){
 
 void initDetector(std::vector<Detector> &dList,Player &mainPlayer, Model Skull, Model Pumk, Texture2D tex)
 {
-    int numMinDect = 10;
-    int numMaxDect = 15;
+    int numMinDect = 8;
+    int numMaxDect = 11;
     // Initialize the Detector objects
     for (int i = 0; i < GetRandomValue(numMinDect,numMaxDect); ++i) {
         // You can modify the initPos or other parameters based on `i` if needed
@@ -194,16 +194,16 @@ void initDetector(std::vector<Detector> &dList,Player &mainPlayer, Model Skull, 
     }
 }
 
-void ResetGame(Player &mainPlayer, ScoreTracker &sTracker,std::vector<Coin> &coinList,int numCoins,std::vector<Detector> &dList, Model skull, Model pumk, Texture2D tex){
+void ResetGame(Player &mainPlayer, ScoreTracker &sTracker,std::vector<Coin> &coinList,int numCoins,std::vector<Detector> &dList, Model skull, Model pumk, Texture2D tex,Model candy){
     //res player
     mainPlayer.Reset();
-    coinList = initCoins(numCoins,sTracker);
+    coinList = initCoins(numCoins,sTracker,candy);
     sTracker.reset();
     dList.clear();
     initDetector(dList,mainPlayer,skull,pumk,tex);
 }
 
-void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, Rectangle quitButton,MenuPages &curPage,bool &closeWin,std::vector<Coin> &coinList,int numCoins,std::vector<Detector> &dList, Model skull, Model pumk, Texture2D tex){
+void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, Rectangle quitButton,MenuPages &curPage,bool &closeWin,std::vector<Coin> &coinList,int numCoins,std::vector<Detector> &dList, Model skull, Model pumk, Texture2D tex, Model candy){
     if (IsCursorHidden())
     {
         EnableCursor();
@@ -217,7 +217,7 @@ void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, 
     if (resetHover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {   
         curPage = GamePage;
-        ResetGame(mainPlayer,sTracker,coinList,numCoins, dList, skull,pumk,tex);
+        ResetGame(mainPlayer,sTracker,coinList,numCoins, dList, skull,pumk,tex,candy);
 
     }
     if (quitHover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -305,10 +305,12 @@ int main(void)
     Model skullModel = LoadModel("Assets/skull.obj");
     Model jackOLanternModel = LoadModel("Assets/pumpkin_orange_jackolantern.obj");
     Model ghostModel = LoadModel("Assets/Player.obj");
+    Model candyModel = LoadModel("Assets/candyBag.obj");
     
     skullModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
     jackOLanternModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
     ghostModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
+    candyModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = tex;
   
 
     std::vector<Model> environmentModels;
@@ -331,9 +333,9 @@ int main(void)
     float timeLimit = 1.5*60; //in seconds
     ScoreTracker sTracker(timeLimit);
     int numCoins = 20;
-    std::vector<Coin> coinList = initCoins(numCoins,sTracker);
+    std::vector<Coin> coinList = initCoins(numCoins,sTracker,candyModel);
 
-    Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,Color{148, 146, 192,255},ghostModel,sTracker);
+    Player mainPlayer (Vector3{0,0,0},0.7f,0.03f,ghostModel,sTracker);
 
     std::vector<Detector> detectors;
 
@@ -362,7 +364,7 @@ int main(void)
         }
 
         if(curPage == ScorePage){
-            ScoreMenu(mainPlayer,sTracker,playButton,quitButton,curPage,closeWindow,coinList,numCoins,detectors,skullModel,jackOLanternModel,tex);
+            ScoreMenu(mainPlayer,sTracker,playButton,quitButton,curPage,closeWindow,coinList,numCoins,detectors,skullModel,jackOLanternModel,tex,candyModel);
         }
     }
 

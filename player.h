@@ -31,7 +31,6 @@ private:
     float speed;
     float runSpeed;
     float walkSpeed;
-    Color playerCol;
     float camSens;
 
     int maxLives;
@@ -47,7 +46,7 @@ private:
 
 public:
     
-    Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor, Model model,ScoreTracker &tracker);
+    Player(Vector3 initSartPos, float initSize, float initSpeed, Model model,ScoreTracker &tracker);
 
     void Update();
 

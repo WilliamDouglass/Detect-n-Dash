@@ -5,6 +5,7 @@
 #include "scoreTracker.h"
 #include "player.h"
 #include <iostream>
+#include <raymath.h>
 
 
 class Coin
@@ -16,10 +17,13 @@ private:
     Color coinColor;
     bool collected;
     ScoreTracker &st;
+    Model model;
+    float roation;
+
     
 
 public:
-    Coin(Vector3 aPos, ScoreTracker &aST);
+    Coin(Vector3 aPos, ScoreTracker &aST, Model aModel);
     void Update();
 
     void Draw();

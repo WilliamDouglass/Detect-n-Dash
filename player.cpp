@@ -1,8 +1,8 @@
 #include "player.h"
 
      
-Player::Player(Vector3 initSartPos, float initSize, float initSpeed, Color initColor,Model model,ScoreTracker &sTracker)
-    :startPos(initSartPos),size(initSize),runSpeed(initSpeed),playerCol(initColor),playerModel(model), tracker(sTracker){
+Player::Player(Vector3 initSartPos, float initSize, float initSpeed,Model model,ScoreTracker &sTracker)
+    :startPos(initSartPos),size(initSize),runSpeed(initSpeed),playerModel(model), tracker(sTracker){
         roation = 0;
         cameraOffset = (Vector3){0.0f, 4.0f, -8.0f};
         camera.position = Vector3Add(startPos,cameraOffset);  // Camera position
@@ -45,6 +45,7 @@ void Player::HandleCamera(){
 }
 
 void Player::Draw(){
+    Color playerCol = WHITE;
     if(iFrams >= timmer)
     {
         playerCol.a = 50;
@@ -62,7 +63,7 @@ void Player::Draw(){
     std::cout << "Y Position: " << pos << std::endl;
     playerPosition.y += pos/90;
 
-    DrawModelEx(playerModel,playerPosition,Vector3{0,1,0},roation,Vector3One(),WHITE);
+    DrawModelEx(playerModel,playerPosition,Vector3{0,1,0},roation,Vector3One(),playerCol);
 }    
 
 void Player::Dead(bool force){

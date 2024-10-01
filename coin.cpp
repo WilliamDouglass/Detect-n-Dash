@@ -1,8 +1,8 @@
 #include "coin.h"
 
 
-    Coin::Coin(Vector3 aPos, ScoreTracker &aST)
-    :position(aPos), st(aST){
+    Coin::Coin(Vector3 aPos, ScoreTracker &aST, Model aModel)
+    :position(aPos), st(aST), model(aModel){
         radius = 0.5f;
         position.y += radius + 0.3;
         coinColor = GOLD;
@@ -16,7 +16,11 @@
     }
 
     void Coin::Draw(){
-        DrawSphere(position,radius,coinColor);
+
+        // DrawSphere(position,radius,coinColor);
+        roation = st.getTimmer();
+        // roation += 90;
+        DrawModelEx(model,position, Vector3{0,1,0},roation,Vector3One(),WHITE);
     }
 
     void Coin::Collect(){
