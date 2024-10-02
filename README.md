@@ -26,7 +26,7 @@
 ### Game Demo
 [Compleated at Shell Hacks](https://youtu.be/ZNxVVlriMxo)
 
-[Update Post Shell Hacks](https://youtu.be/WGhCLxvJH0s)
+[Update Post Shell Hacks](https://youtu.be/JWnK6HolpWI)
 
 ### Installation and Running the Game:
 
