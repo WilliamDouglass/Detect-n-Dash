@@ -162,7 +162,6 @@ Vector3 getRandV3(int min, int max){
     };
 }
 
-
 void initDetector(std::vector<Detector> &dList,Player &mainPlayer, Model Skull, Model Pumk, Texture2D tex)
 {
     int numMinDect = 8;
@@ -229,9 +228,9 @@ void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, 
     const char* mainText;
     if (sTracker.getPoint() >= numCoins)
     {
-        mainText = "Congrats You Collected all the Coins";
+        mainText = "Congrats You Collected all the Candy";
     }else{
-        mainText = TextFormat("Lookes like you missed %d coins try again?", numCoins - sTracker.getPoint() );
+        mainText = TextFormat("Lookes like you missed %d Candy Bags try again?", numCoins - sTracker.getPoint() );
     }
     
 
@@ -272,10 +271,6 @@ void ScoreMenu(Player &mainPlayer,ScoreTracker &sTracker,Rectangle resetButton, 
     
     EndDrawing();
 }
-
-
-
-
 
 int main(void)
 {

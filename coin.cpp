@@ -4,7 +4,7 @@
     Coin::Coin(Vector3 aPos, ScoreTracker &aST, Model aModel)
     :position(aPos), st(aST), model(aModel){
         radius = 0.5f;
-        position.y += radius + 0.3;
+        position.y = 0;
         coinColor = GOLD;
         collected = false;
     }
@@ -18,9 +18,10 @@
     void Coin::Draw(){
 
         // DrawSphere(position,radius,coinColor);
-        roation = st.getTimmer();
-        // roation += 90;
+        // roation = st.getTimmer();
+        roation += 1;
         DrawModelEx(model,position, Vector3{0,1,0},roation,Vector3One(),WHITE);
+                std::cout << "Rot: " << roation << std::endl;
     }
 
     void Coin::Collect(){

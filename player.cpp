@@ -60,7 +60,7 @@ void Player::Draw(){
     //Ghost bobbing
     float pos = playerPosition.y;
     pos =sin(tracker.getTimmer()*3);
-    std::cout << "Y Position: " << pos << std::endl;
+    // std::cout << "Y Position: " << pos << std::endl;
     playerPosition.y += pos/90;
 
     DrawModelEx(playerModel,playerPosition,Vector3{0,1,0},roation,Vector3One(),playerCol);
