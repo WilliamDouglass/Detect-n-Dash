@@ -24,7 +24,8 @@
 4. Collect all coins in the fastest time possible.
 
 ### Game Demo
-[Youtube Video](https://youtu.be/ZNxVVlriMxo)
+[Compleated at Shell Hacks](https://youtu.be/ZNxVVlriMxo)
+[Update Post Shell Hacks](https://youtu.be/WGhCLxvJH0s)
 
 ### Installation and Running the Game:
 
