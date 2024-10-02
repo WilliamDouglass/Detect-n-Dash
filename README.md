@@ -18,13 +18,14 @@
 
 ### How to Play:
 
-1. Collect all the coins scattered around the map.
+1. Collect all the Candy Bags scattered around the map.
 2. Avoid detection from enemies, who will send you back to the start if they spot you.
 3. Complete the challenge with only 3 lives—if you lose them all, it's game over.
 4. Collect all coins in the fastest time possible.
 
 ### Game Demo
 [Compleated at Shell Hacks](https://youtu.be/ZNxVVlriMxo)
+
 [Update Post Shell Hacks](https://youtu.be/WGhCLxvJH0s)
 
 ### Installation and Running the Game:
